@@ -109,4 +109,26 @@ export const authService = {
       toast.error("Something went wrong. Please try again.", { id: toastId });
     }
   },
+  updateProfile: async function ({ name }: { name?: string }) {
+    const toastId = toast.loading("Updating profile...");
+    try {
+      await authClient.updateUser({
+        name,
+        fetchOptions: {
+          onSuccess: () => {
+            toast.success("Profile updated successfully", { id: toastId });
+          },
+          onError: (error) => {
+            console.error("Profile update error:", error);
+            toast.error("Failed to update profile. Please try again.", {
+              id: toastId,
+            });
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Profile update error:", error);
+      toast.error("Something went wrong. Please try again.", { id: toastId });
+    }
+  },
 };

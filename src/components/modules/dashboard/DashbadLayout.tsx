@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -13,7 +13,6 @@ import {
   Lightbulb,
   Eye,
   BookOpen,
-  Settings,
   LogOut,
   TrendingUp,
   FileText,
@@ -22,7 +21,12 @@ import {
   Tag,
   Bell,
   Leaf,
-  DollarSign,
+  User,
+  ChevronDown,
+  HelpCircle,
+  Shield,
+  Info,
+  Home,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -56,6 +60,22 @@ export function DashboardClientLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -76,6 +96,7 @@ export function DashboardClientLayout({
     if (userRole === Role.ADMIN) {
       return [
         { name: "Overview", href: "/admin/dashboard", icon: LayoutDashboard },
+        { name: "Profile", href: "/admin/dashboard/profile", icon: User },
         { name: "Users", href: "/admin/dashboard/users", icon: Users },
         { name: "Members", href: "/admin/dashboard/members", icon: UserCheck },
         {
@@ -96,6 +117,7 @@ export function DashboardClientLayout({
     if (userRole === Role.MEMBER) {
       return [
         { name: "Overview", href: "/member/dashboard", icon: LayoutDashboard },
+        { name: "Profile", href: "/member/dashboard/profile", icon: User },
         { name: "My Ideas", href: "/member/dashboard/ideas", icon: Lightbulb },
         {
           name: "Create Idea",
@@ -115,6 +137,7 @@ export function DashboardClientLayout({
     // Regular user
     return [
       { name: "Overview", href: "/dashboard", icon: LayoutDashboard },
+      { name: "Profile", href: "/dashboard/profile", icon: User },
       {
         name: "Become Member",
         href: "/dashboard/become-member",
@@ -133,6 +156,7 @@ export function DashboardClientLayout({
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
+    setIsProfileOpen(false);
     const toastId = toast.loading("Logging out...");
 
     try {
@@ -191,6 +215,33 @@ export function DashboardClientLayout({
     if (userRole === Role.MEMBER) return "M";
     return "U";
   };
+
+  // Get overview link based on role
+  const getOverviewLink = () => {
+    if (userRole === Role.ADMIN) return "/admin/dashboard";
+    if (userRole === Role.MEMBER) return "/member/dashboard";
+    return "/dashboard";
+  };
+  // Get profile link based on role
+  const getProfileLink = () => {
+    if (userRole === Role.ADMIN) return "/admin/dashboard/profile";
+    if (userRole === Role.MEMBER) return "/member/dashboard/profile";
+    return "/dashboard/profile";
+  };
+
+  // Profile dropdown links
+  const profileMenuLinks = [
+    { label: "Home", href: "/", icon: Home },
+    { label: "Profile", href: getProfileLink(), icon: User },
+    { label: "Overview", href: getOverviewLink(), icon: LayoutDashboard },
+    { label: "All Ideas", href: "/ideas", icon: Lightbulb },
+    { label: "All Blogs", href: "/blogs", icon: BookOpen },
+    { label: "About Us", href: "/about", icon: Info },
+    { label: "Contact", href: "/contact", icon: HelpCircle },
+    { label: "FAQ", href: "/faq", icon: HelpCircle },
+    { label: "Privacy Policy", href: "/privacy", icon: Shield },
+    { label: "Terms of Service", href: "/terms", icon: FileText },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-zinc-950 dark:to-zinc-900">
@@ -434,7 +485,7 @@ export function DashboardClientLayout({
       >
         {/* Top Bar */}
         <div className="sticky top-0 z-20 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-gray-200 dark:border-zinc-800">
-          <div className="px-4 sm:px-6 lg:px-8 py-4">
+          <div className="px-4 sm:px-6 lg:px-8 py-6">
             <div className="flex items-center justify-between">
               <div className="flex-1" />
               <div className="flex items-center space-x-4">
@@ -443,6 +494,75 @@ export function DashboardClientLayout({
                   <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
                 </Button>
                 <ModeToggle />
+
+                {/* Profile Dropdown */}
+                <div className="relative" ref={profileRef}>
+                  <Button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-zinc-800 transition-all"
+                    aria-expanded={isProfileOpen}
+                    aria-haspopup="true"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center text-white font-semibold text-sm">
+                      {getUserInitial()}
+                    </div>
+                    <ChevronDown
+                      className={`hidden sm:block w-4 h-4 text-gray-500 transition-transform duration-200 ${
+                        isProfileOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </Button>
+
+                  <AnimatePresence>
+                    {isProfileOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden"
+                      >
+                        <div className="p-1.5">
+                          {profileMenuLinks.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              onClick={() => setIsProfileOpen(false)}
+                              className={`
+                                flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors
+                                ${
+                                  pathname === link.href
+                                    ? "bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-400"
+                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
+                                }
+                              `}
+                            >
+                              <link.icon className="w-5 h-5 text-gray-400" />
+                              <span className="text-sm font-medium">
+                                {link.label}
+                              </span>
+                            </Link>
+                          ))}
+
+                          {/* Divider */}
+                          <div className="h-px bg-gray-200 dark:bg-zinc-800 my-1.5" />
+
+                          {/* Logout */}
+                          <button
+                            onClick={handleLogout}
+                            disabled={isLoggingOut}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors disabled:opacity-50"
+                          >
+                            <LogOut className="w-5 h-5" />
+                            <span className="text-sm font-medium">
+                              {isLoggingOut ? "Logging out..." : "Logout"}
+                            </span>
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
           </div>
