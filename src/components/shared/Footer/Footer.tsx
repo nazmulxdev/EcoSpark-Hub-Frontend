@@ -155,28 +155,36 @@ export function Footer() {
               {/* Social Links */}
               <div className="flex justify-center sm:justify-start space-x-4 pt-4">
                 <Link
-                  href="#"
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-all duration-200 hover:scale-110"
                   aria-label="Facebook"
                 >
                   <FaFacebook className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-all duration-200 hover:scale-110"
                   aria-label="Twitter"
                 >
                   <FaTwitter className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-all duration-200 hover:scale-110"
                   aria-label="Instagram"
                 >
                   <FaInstagram className="w-5 h-5" />
                 </Link>
                 <Link
-                  href="#"
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-all duration-200 hover:scale-110"
                   aria-label="LinkedIn"
                 >
