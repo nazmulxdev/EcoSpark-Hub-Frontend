@@ -354,30 +354,35 @@ export function PublicIdeasClient({
           {/* Search Row */}
           <div className="p-5 border-b border-gray-100 dark:border-zinc-800">
             <div className="flex flex-col lg:flex-row gap-4">
+              {/* Search Input */}
               <div className="flex-1 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
-                  placeholder="Search ideas by title, description, or problem statement..."
+                  placeholder="Search ideas..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                  className="pl-12 pr-24 h-12 text-base"
+                  className="pl-12 pr-10 h-12 text-base" // ✅ reduced right padding
                 />
                 {search && (
                   <Button
                     onClick={clearSearch}
                     variant="ghost"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800"
+                    className="absolute right-1 top-1/2 -translate-y-1/2 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-zinc-800"
                   >
                     <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
                   </Button>
                 )}
               </div>
-              <div className="flex gap-3">
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 flex-wrap">
+                {" "}
+                {/* ✅ added flex-wrap */}
                 <Button
                   onClick={handleSearch}
                   disabled={isPending}
-                  className="h-12 px-8 bg-green-600 hover:bg-green-700 text-white"
+                  className="h-12 px-8 bg-green-600 hover:bg-green-700 text-white whitespace-nowrap"
                 >
                   {isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -388,7 +393,7 @@ export function PublicIdeasClient({
                 <Button
                   variant="outline"
                   onClick={() => setShowFilters(!showFilters)}
-                  className="h-12 gap-2"
+                  className="h-12 gap-2 whitespace-nowrap"
                 >
                   <Filter className="w-4 h-4" />
                   Filters
@@ -400,7 +405,7 @@ export function PublicIdeasClient({
                   <Button
                     variant="ghost"
                     onClick={resetFilters}
-                    className="h-12 gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
+                    className="h-12 gap-2 text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 whitespace-nowrap"
                   >
                     <RefreshCw className="w-4 h-4" />
                     Reset
@@ -414,6 +419,7 @@ export function PublicIdeasClient({
           {showFilters && (
             <div className="px-5 py-5 bg-gray-50 dark:bg-zinc-800/30 border-b border-gray-100 dark:border-zinc-800">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Access Type Filter */}
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                     Access Type
@@ -435,6 +441,8 @@ export function PublicIdeasClient({
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Sort By Filter */}
                 <div>
                   <label className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
                     Sort By

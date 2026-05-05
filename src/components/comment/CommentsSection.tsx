@@ -234,7 +234,7 @@ export function CommentsSection({
                     size="sm"
                     onClick={handleLocalReply}
                     disabled={isLocalSubmitting || !localReplyContent.trim()}
-                    className="bg-green-600 hover:bg-green-700"
+                    className="bg-green-600 text-white hover:bg-green-700"
                   >
                     {isLocalSubmitting ? (
                       <Loader2 className="w-3 h-3 animate-spin mr-1" />
@@ -297,7 +297,7 @@ export function CommentsSection({
           <Button
             onClick={handleSubmitComment}
             disabled={isSubmitting || !newComment.trim()}
-            className="bg-green-600 hover:bg-green-700"
+            className="bg-green-600 text-white hover:bg-green-700"
           >
             {isSubmitting ? (
               <>

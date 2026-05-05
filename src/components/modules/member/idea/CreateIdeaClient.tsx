@@ -592,7 +592,7 @@ export function CreateIdeaClient({ categories }: CreateIdeaClientProps) {
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-full h-10 sm:h-12 text-sm sm:text-base font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-10 sm:h-12 text-sm sm:text-base text-white font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? (
             <>

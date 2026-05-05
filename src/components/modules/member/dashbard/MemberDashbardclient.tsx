@@ -220,8 +220,8 @@ export function MemberDashboardClient({
             </p>
           </div>
           <div className="flex gap-3">
-            <Link href="/member/dashboard/ideas/new">
-              <Button className="bg-green-600 hover:bg-green-700">
+            <Link href="/member/dashboard/create">
+              <Button className="bg-green-600 text-white hover:bg-green-700">
                 <Lightbulb className="w-4 h-4 mr-2" />
                 New Idea
               </Button>

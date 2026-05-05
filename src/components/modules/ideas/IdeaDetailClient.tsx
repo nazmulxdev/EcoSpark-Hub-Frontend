@@ -385,7 +385,7 @@ export function IdeaDetailClient({
                     </div>
                     <Button
                       onClick={handleDirectPurchase}
-                      className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-3"
+                      className="bg-gradient-to-r text-white from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 px-8 py-3"
                     >
                       <DollarSign className="w-4 h-4 mr-2" />
                       Purchase Now

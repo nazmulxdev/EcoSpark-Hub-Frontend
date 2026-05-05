@@ -1,5 +1,3 @@
-// components/dashboard/member/PurchasedIdeasClient.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -101,19 +99,19 @@ export function PurchasedIdeasClient({
 
   if (purchases.length === 0) {
     return (
-      <div className="max-w-full mx-auto px-4 py-12">
+      <div className="max-w-full mx-auto px-3 sm:px-4 py-8 sm:py-12">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gray-100 dark:bg-zinc-800 rounded-full mb-4">
-            <ShoppingBag className="w-10 h-10 text-gray-400" />
+          <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 dark:bg-zinc-800 rounded-full mb-3 sm:mb-4">
+            <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
           </div>
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-2">
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white mb-2">
             No purchased ideas yet
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
             Browse and purchase premium ideas to access them here
           </p>
           <Link href="/ideas">
-            <Button className="bg-green-600 hover:bg-green-700">
+            <Button className="bg-green-600 text-white hover:bg-green-700 text-sm sm:text-base">
               Browse Ideas
             </Button>
           </Link>
@@ -123,19 +121,19 @@ export function PurchasedIdeasClient({
   }
 
   return (
-    <div className="max-w-full mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-          <ShoppingBag className="w-6 h-6 text-green-500" />
+    <div className="max-w-full mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+          <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
           My Purchased Ideas
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">
+        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
           You have purchased {purchases.length}{" "}
           {purchases.length === 1 ? "idea" : "ideas"}
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         {purchases.map((purchase, idx) => {
           const idea = purchase.idea;
           const access = getAccessBadge(idea.accessType, idea.price);
@@ -154,27 +152,29 @@ export function PurchasedIdeasClient({
             >
               <div className="flex flex-col md:flex-row">
                 {/* Image Section */}
-                {imageUrl ? (
-                  <div className="md:w-48 h-48 md:h-auto overflow-hidden">
+                <div className="relative w-full md:w-32 lg:w-48 h-48 md:h-auto bg-gray-100 dark:bg-zinc-800 overflow-hidden shrink-0">
+                  {imageUrl ? (
                     <Image
                       src={imageUrl}
                       alt={idea.title}
                       fill
-                      priority
-                      className="w-full h-full object-cover"
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 192px"
                     />
-                  </div>
-                ) : (
-                  <div className="md:w-48 h-48 md:h-auto bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-950/50 dark:to-emerald-950/50 flex items-center justify-center">
-                    <Lightbulb className="w-12 h-12 text-green-500" />
-                  </div>
-                )}
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Lightbulb className="w-10 h-10 sm:w-12 sm:h-12 text-green-500" />
+                    </div>
+                  )}
+                </div>
 
                 {/* Content Section */}
-                <div className="flex-1 p-5">
-                  <div className="flex flex-wrap items-center gap-2 mb-2">
-                    <Badge className={`${access.color} gap-1 border-0`}>
-                      <AccessIcon className="w-3 h-3" />
+                <div className="flex-1 p-4 sm:p-5">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2">
+                    <Badge
+                      className={`${access.color} gap-1 border-0 text-xs sm:text-sm`}
+                    >
+                      <AccessIcon className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                       {access.label}
                     </Badge>
                     <span className="text-xs text-gray-500">
@@ -183,28 +183,34 @@ export function PurchasedIdeasClient({
                   </div>
 
                   <Link href={`/ideas/${idea.slug}`}>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white hover:text-green-600 transition-colors mb-2">
+                    <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white hover:text-green-600 transition-colors mb-1 sm:mb-2 line-clamp-2">
                       {idea.title}
                     </h3>
                   </Link>
 
-                  <p className="text-gray-600 dark:text-gray-400 text-sm line-clamp-2 mb-3">
-                    {idea.description || idea.problemStatement}
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-2 mb-2 sm:mb-3">
+                    {idea.description ||
+                      idea.problemStatement ||
+                      "No description available"}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+                  <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs text-gray-500">
                     <div className="flex items-center gap-1">
                       <User className="w-3 h-3" />
-                      By {idea.author.name}
+                      <span className="truncate max-w-[100px] sm:max-w-none">
+                        {idea.author.name}
+                      </span>
                     </div>
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
-                      Purchased{" "}
-                      {formatDistanceToNow(new Date(purchase.createdAt), {
-                        addSuffix: true,
-                      })}
+                      <span>
+                        Purchased{" "}
+                        {formatDistanceToNow(new Date(purchase.createdAt), {
+                          addSuffix: true,
+                        })}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                       <span className="flex items-center gap-1">
                         <ThumbsUp className="w-3 h-3" />
                         {voteCount}
@@ -216,18 +222,18 @@ export function PurchasedIdeasClient({
                     </div>
                     <div className="flex items-center gap-1 text-green-600">
                       <CheckCircle className="w-3 h-3" />
-                      <span>Purchased for ${purchase.amount}</span>
+                      <span>${purchase.amount}</span>
                     </div>
                   </div>
 
-                  <div className="mt-4">
+                  <div className="mt-3 sm:mt-4">
                     <Button
                       asChild
                       size="sm"
-                      className="bg-green-600 hover:bg-green-700"
+                      className="bg-green-600 text-white hover:bg-green-700 text-xs sm:text-sm h-8 sm:h-9"
                     >
                       <Link href={`/ideas/${idea.slug}`}>
-                        <Eye className="w-4 h-4 mr-2" />
+                        <Eye className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                         View Full Idea
                       </Link>
                     </Button>
@@ -240,22 +246,22 @@ export function PurchasedIdeasClient({
       </div>
 
       {/* Purchase Stats Card */}
-      <div className="mt-8 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl border border-green-200 dark:border-green-800">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
-              <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400" />
+      <div className="mt-6 sm:mt-8 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-xl border border-green-200 dark:border-green-800">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="p-1.5 sm:p-2 bg-green-100 dark:bg-green-900/50 rounded-lg">
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                 Total Spent
               </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">
+              <p className="text-lg sm:text-2xl font-bold text-gray-900 dark:text-white">
                 ${purchases.reduce((sum, p) => sum + Number(p.amount), 0)}
               </p>
             </div>
           </div>
-          <div className="text-sm text-gray-500">
+          <div className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
             You have lifetime access to all purchased ideas
           </div>
         </div>

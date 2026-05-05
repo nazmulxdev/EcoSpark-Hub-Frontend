@@ -150,7 +150,7 @@ export function WatchlistClient({
             Save interesting ideas to read them later
           </p>
           <Link href="/ideas">
-            <Button className="bg-green-600 hover:bg-green-700">
+            <Button className="bg-green-600 text-white hover:bg-green-700">
               Browse Ideas
             </Button>
           </Link>

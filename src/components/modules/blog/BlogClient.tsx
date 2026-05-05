@@ -218,7 +218,7 @@ export function BlogClient({
             <Button
               onClick={handleSearch}
               disabled={isPending}
-              className="h-12 px-6 bg-green-600 hover:bg-green-700"
+              className="h-12 px-6 bg-green-600 text-white hover:bg-green-700"
               aria-label="Search"
             >
               {isPending ? (

@@ -328,7 +328,7 @@ export function CategoriesClient({
         <Button
           onClick={handleSearch}
           disabled={isPending}
-          className="bg-green-600 hover:bg-green-700"
+          className="bg-green-600 text-white hover:bg-green-700"
         >
           {isPending ? "Searching..." : "Search"}
         </Button>
@@ -403,7 +403,7 @@ export function CategoriesClient({
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((category, idx) => {
             const ideaCount =
               category.ideas?.length || category._count?.ideas || 0;

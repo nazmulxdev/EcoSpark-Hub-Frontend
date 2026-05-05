@@ -4,15 +4,18 @@ import { authService } from "./services/auth/auth.service";
 export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const isPublicPath =
-    pathname === "/" ||
-    pathname === "/login" ||
-    pathname === "/register" ||
-    pathname === "/about" ||
-    pathname.startsWith("/ideas") ||
-    pathname.startsWith("/blogs");
+  const publicPaths = [
+    "/",
+    "/login",
+    "/register",
+    "/about",
+    "/ideas",
+    "/blogs",
+  ];
 
-  if (isPublicPath) return NextResponse.next();
+  if (publicPaths.includes(pathname)) {
+    return NextResponse.next();
+  }
 
   const { data, error } = await authService.getSession();
 
@@ -33,7 +36,10 @@ export async function proxy(request: NextRequest) {
   const roleBasedRoutes: Record<string, string[]> = {
     "/admin/dashboard/:path*": ["ADMIN"],
     "/member/dashboard/:path*": ["MEMBER"],
+    "/admin/dashboard": ["ADMIN"],
+    "/member/dashboard": ["MEMBER"],
     "/dashboard/:path*": ["USER"],
+    "/dashboard": ["USER"],
     "/ideas/:path*": ["ADMIN", "MEMBER", "USER"],
     "/blogs/:path*": ["ADMIN", "MEMBER", "USER"],
   };
@@ -44,19 +50,10 @@ export async function proxy(request: NextRequest) {
     const dynamicPath = new RegExp(regexStr);
 
     if (dynamicPath.test(pathname)) {
-      if (!userRole || !roleBasedRoutes[path]!.includes(userRole)) {
-        if (userRole === "ADMIN") {
-          return NextResponse.redirect(
-            new URL("/admin/dashboard", request.url),
-          );
-        }
-        if (userRole === "MEMBER") {
-          return NextResponse.redirect(
-            new URL("/member/dashboard", request.url),
-          );
-        }
-
-        return NextResponse.redirect(new URL("/dashboard", request.url));
+      if (!roleBasedRoutes[path]!.includes(userRole)) {
+        return NextResponse.redirect(
+          new URL(`/login?redirect=${pathname}`, request.url),
+        );
       }
       return NextResponse.next();
     }
@@ -72,5 +69,8 @@ export const config = {
     "/dashboard/:path*",
     "/ideas/:path*",
     "/blogs/:path*",
+    "/admin/dashboard",
+    "/member/dashboard",
+    "/dashboard",
   ],
 };

@@ -32,6 +32,20 @@ const formData = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
+const DEMO_ACCOUNTS = [
+  { label: "Demo User", email: "demo-user@gmail.com", password: "12345678" },
+  {
+    label: "Demo Member",
+    email: "demo-member@gmail.com",
+    password: "12345678",
+  },
+  {
+    label: "Admin",
+    email: "admin.ecospark.hub@eco.com",
+    password: "admin1234",
+  },
+];
+
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -40,8 +54,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-
-  console.log(redirectPath);
+  const [demoLoadingRole, setDemoLoadingRole] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
@@ -97,6 +110,48 @@ export default function LoginForm() {
       setIsGoogleLoading(false);
     }
   };
+
+  // Direct demo login – bypasses form
+  const handleDemoLogin = async (
+    email: string,
+    password: string,
+    roleLabel: string,
+  ) => {
+    setDemoLoadingRole(roleLabel);
+    setIsLoading(true);
+    const toastId = toast.loading(`Signing in as ${roleLabel}...`);
+
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email,
+        password,
+        callbackURL: redirectPath,
+        rememberMe: true,
+      });
+
+      if (error) {
+        toast.error(
+          `Demo login failed: ${error.message || "Invalid credentials"}`,
+          { id: toastId },
+        );
+        setIsLoading(false);
+        setDemoLoadingRole(null);
+        return;
+      }
+
+      if (data) {
+        toast.success(`Logged in as ${roleLabel}!`, { id: toastId });
+        router.push(redirectPath);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong.", { id: toastId });
+      setIsLoading(false);
+      setDemoLoadingRole(null);
+    }
+  };
+
+  const isAnyLoading = isLoading || isGoogleLoading;
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -204,13 +259,49 @@ export default function LoginForm() {
             }}
           </form.Field>
         </FieldGroup>
+
+        {/* Demo Login Buttons (direct login, no form fill) */}
+        <div className="pt-2">
+          <p className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2 text-center">
+            Quick Login for Testing
+          </p>
+          <div className="flex gap-2 justify-center">
+            {DEMO_ACCOUNTS.map((account) => (
+              <Button
+                key={account.label}
+                type="button"
+                size="sm"
+                variant="outline"
+                className="text-xs h-8 px-3"
+                disabled={isAnyLoading}
+                onClick={() =>
+                  handleDemoLogin(
+                    account.email,
+                    account.password,
+                    account.label,
+                  )
+                }
+              >
+                {demoLoadingRole === account.label ? (
+                  <>
+                    <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin mr-1" />
+                    Logging in...
+                  </>
+                ) : (
+                  account.label
+                )}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         {/* Submit Button */}
         <Button
           type="submit"
-          disabled={isLoading || isGoogleLoading}
-          className="w-full h-12 text-base font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={isAnyLoading}
+          className="w-full h-12 text-base text-white font-medium bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? (
+          {isLoading && !demoLoadingRole ? (
             <>
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
               Signing in...
@@ -240,7 +331,7 @@ export default function LoginForm() {
           <button
             type="button"
             onClick={handleGoogleSignIn}
-            disabled={isLoading || isGoogleLoading}
+            disabled={isAnyLoading}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-800 hover:bg-gray-50 dark:hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isGoogleLoading ? (

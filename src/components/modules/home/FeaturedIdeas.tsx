@@ -112,7 +112,7 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.1 }}
-                className="group bg-gray-50 dark:bg-zinc-800/50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group bg-gray-50 border border-gray-200 dark:border-zinc-800 dark:bg-zinc-800/50 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 {/* Image */}
                 <Link
@@ -217,7 +217,10 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
         {/* View All Button */}
         <div className="text-center mt-12">
           <Link href="/ideas">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 gap-2">
+            <Button
+              size="lg"
+              className="bg-green-600 text-white hover:bg-green-700 gap-2"
+            >
               View All Ideas
               <ArrowRight className="w-5 h-5" />
             </Button>

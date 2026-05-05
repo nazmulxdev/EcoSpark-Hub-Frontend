@@ -316,7 +316,7 @@ export function UsersClient({
                 <Button
                   onClick={handleSearch}
                   disabled={isPending}
-                  className="h-11 px-6 bg-green-600 hover:bg-green-700"
+                  className="h-11 px-6 bg-green-600 text-white hover:bg-green-700"
                 >
                   {isPending ? (
                     <Loader2 className="w-4 h-4 animate-spin" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -12,12 +12,46 @@ import {
   LogIn,
   UserPlus,
   Leaf,
+  ChevronDown,
+  Mail,
+  Shield,
+  HelpCircle,
+  FileText,
 } from "lucide-react";
 
 import { Role } from "@/types/enums";
 import { getAuthSession } from "@/actions/client/auth.client";
 import { ModeToggle } from "@/components/Theme/ModeToggle";
 import { authClientService } from "@/services/auth/auth.service.client";
+import { Button } from "@/components/ui/button";
+
+// Additional page links for advanced dropdown menu
+const moreLinks = [
+  {
+    href: "/contact",
+    label: "Contact",
+    icon: Mail,
+    description: "Get in touch with us",
+  },
+  {
+    href: "/privacy",
+    label: "Privacy Policy",
+    icon: Shield,
+    description: "How we handle your data",
+  },
+  {
+    href: "/faq",
+    label: "FAQ",
+    icon: HelpCircle,
+    description: "Frequently asked questions",
+  },
+  {
+    href: "/terms",
+    label: "Terms of Service",
+    icon: FileText,
+    description: "Rules and guidelines",
+  },
+];
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +59,19 @@ export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<Role | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMoreOpen, setIsMoreOpen] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(event.target as Node)) {
+        setIsMoreOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -57,6 +104,7 @@ export function Navbar() {
 
     fetchSession();
   }, []);
+
   const pathname = usePathname();
 
   useEffect(() => {
@@ -80,8 +128,8 @@ export function Navbar() {
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/ideas", label: "Ideas" },
-    { href: "/about", label: "About Us" },
     { href: "/blogs", label: "Blogs" },
+    { href: "/about", label: "About Us" },
   ];
 
   const isActive = (path: string) => pathname === path;
@@ -155,7 +203,7 @@ export function Navbar() {
 
             {/* Desktop Navigation - Centered */}
             <div className="hidden lg:flex items-center justify-center flex-1">
-              <div className="flex items-center space-x-1 bg-gray-50 dark:bg-zinc-900/50 rounded-full p-1">
+              <div className="flex items-center space-x-1 rounded-full p-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.href}
@@ -172,6 +220,76 @@ export function Navbar() {
                     {link.label}
                   </Link>
                 ))}
+
+                {/* Advanced Dropdown Menu */}
+                <div className="relative" ref={moreRef}>
+                  <Button
+                    onClick={() => setIsMoreOpen(!isMoreOpen)}
+                    className={`
+                      px-5 py-2 rounded-full transition-all duration-200 text-sm font-medium flex items-center gap-1
+                      ${
+                        moreLinks.some((l) => isActive(l.href))
+                          ? "bg-green-500 text-white shadow-md"
+                          : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-zinc-800"
+                      }
+                    `}
+                    aria-expanded={isMoreOpen}
+                    aria-haspopup="true"
+                  >
+                    More
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isMoreOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </Button>
+
+                  <AnimatePresence>
+                    {isMoreOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full mt-2 right-0 w-56 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl shadow-xl z-50 overflow-hidden"
+                      >
+                        <div className="p-1.5">
+                          {moreLinks.map((link) => (
+                            <Link
+                              key={link.href}
+                              href={link.href}
+                              onClick={() => setIsMoreOpen(false)}
+                              className={`
+                                flex items-start gap-3 px-3 py-2.5 rounded-lg transition-colors
+                                ${
+                                  isActive(link.href)
+                                    ? "bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-400"
+                                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800"
+                                }
+                              `}
+                            >
+                              <link.icon
+                                className={`w-5 h-5 mt-0.5 ${
+                                  isActive(link.href)
+                                    ? "text-green-600 dark:text-green-400"
+                                    : "text-gray-400"
+                                }`}
+                              />
+                              <div>
+                                <div className="text-sm font-medium">
+                                  {link.label}
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                                  {link.description}
+                                </div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
 
@@ -303,6 +421,34 @@ export function Navbar() {
                   </Link>
                 </motion.div>
               ))}
+
+              {/* Additional Links Section (Mobile) */}
+              <div className="pt-2 space-y-2">
+                {moreLinks.map((link, idx) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.15 + idx * 0.05 }}
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={() => setIsOpen(false)}
+                      className={`
+                        flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200
+                        ${
+                          isActive(link.href)
+                            ? "bg-green-50 dark:bg-green-950/50 text-green-600 dark:text-green-500 font-semibold"
+                            : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-zinc-900"
+                        }
+                      `}
+                    >
+                      <link.icon className="w-5 h-5 text-gray-400" />
+                      <span>{link.label}</span>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
 
               {/* Divider */}
               <div className="h-px bg-gray-200 dark:bg-zinc-800 my-4" />

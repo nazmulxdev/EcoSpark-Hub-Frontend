@@ -344,7 +344,10 @@ export function CommunityImpactSection() {
           className="text-center mt-12"
         >
           <Link href="/register">
-            <Button size="lg" className="bg-green-600 hover:bg-green-700 gap-2">
+            <Button
+              size="lg"
+              className="bg-green-600 text-white hover:bg-green-700 gap-2"
+            >
               <Leaf className="w-5 h-5" />
               Join the Movement
               <TrendingUp className="w-5 h-5" />

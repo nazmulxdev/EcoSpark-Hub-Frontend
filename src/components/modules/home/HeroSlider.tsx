@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image"; // ✅ Import Image
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
@@ -26,6 +27,9 @@ const slides = [
     icon: Lightbulb,
     gradient: "from-green-600 to-emerald-600",
     stats: { value: "500+", label: "Ideas Shared" },
+    // Photo by Noah Buscher on Unsplash – group brainstorming with plants
+    image:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&h=400&fit=crop",
   },
   {
     id: 2,
@@ -37,6 +41,9 @@ const slides = [
     icon: TrendingUp,
     gradient: "from-blue-600 to-cyan-600",
     stats: { value: "1000+", label: "Community Votes" },
+    // Photo by Andreas Gücklhorn on Unsplash – solar panels
+    image:
+      "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=400&fit=crop",
   },
   {
     id: 3,
@@ -48,6 +55,9 @@ const slides = [
     icon: Users,
     gradient: "from-purple-600 to-pink-600",
     stats: { value: "50+", label: "Active Members" },
+    // Photo by Hannah Busing on Unsplash – group planting a tree
+    image:
+      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=600&h=400&fit=crop",
   },
 ];
 
@@ -84,20 +94,20 @@ export function HeroSlider() {
   const Icon = currentSlide.icon;
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden h-[65vh] min-h-[500px] max-h-[800px]">
       {/* Background Gradient */}
       <div
         className={`absolute inset-0 bg-gradient-to-r ${currentSlide.gradient} opacity-90`}
       />
 
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
+      <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-72 h-72 bg-white rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl" />
       </div>
 
       {/* Content */}
-      <div className="relative max-w-7xl mx-auto px-4 py-20 md:py-28 min-h-[500px] md:min-h-[600px] flex items-center">
+      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentIndex}
@@ -105,7 +115,7 @@ export function HeroSlider() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full"
+            className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center w-full h-full"
           >
             {/* Left Content */}
             <div className="text-white">
@@ -164,27 +174,16 @@ export function HeroSlider() {
               </div>
             </div>
 
-            {/* Right Content - Illustration */}
-            <div className="hidden lg:flex justify-center">
-              <div className="relative">
-                <div className="w-80 h-80 bg-white/10 rounded-full flex items-center justify-center backdrop-blur-sm">
-                  <Icon className="w-32 h-32 text-white" />
-                </div>
-                {/* Floating elements */}
-                <motion.div
-                  animate={{ y: [0, -10, 0] }}
-                  transition={{ duration: 3, repeat: Infinity }}
-                  className="absolute -top-5 -right-5 w-16 h-16 bg-yellow-500/20 rounded-full flex items-center justify-center backdrop-blur-sm"
-                >
-                  <Leaf className="w-8 h-8 text-yellow-300" />
-                </motion.div>
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity }}
-                  className="absolute -bottom-5 -left-5 w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center backdrop-blur-sm"
-                >
-                  <Lightbulb className="w-10 h-10 text-green-300" />
-                </motion.div>
+            {/* Right Content - Image (replaces icon illustration) */}
+            <div className="hidden lg:flex justify-center items-center">
+              <div className="relative w-80 h-80 md:w-96 md:h-96 rounded-full overflow-hidden shadow-2xl border-4 border-white/30">
+                <Image
+                  src={currentSlide.image}
+                  alt={currentSlide.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
               </div>
             </div>
           </motion.div>
@@ -194,7 +193,7 @@ export function HeroSlider() {
       {/* Navigation Arrows */}
       <button
         onClick={goToPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white"
+        className="absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white z-10"
         aria-label="Previous slide"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -202,14 +201,14 @@ export function HeroSlider() {
 
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white"
+        className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white z-10"
         aria-label="Next slide"
       >
         <ChevronRight className="w-6 h-6" />
       </button>
 
       {/* Dots Navigation */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {slides.map((_, index) => (
           <button
             key={index}
