@@ -78,10 +78,10 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/blog"
+                    href="/blogs"
                     className="text-sm text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-colors duration-200"
                   >
-                    Blog
+                    Blogs
                   </Link>
                 </li>
                 <li>
@@ -119,10 +119,10 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/cookies"
+                    href="/faq"
                     className="text-sm text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-500 transition-colors duration-200"
                   >
-                    Cookie Policy
+                    FAQ
                   </Link>
                 </li>
               </ul>

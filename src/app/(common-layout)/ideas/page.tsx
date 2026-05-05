@@ -22,7 +22,7 @@ interface PageProps {
 export default async function PublicIdeasPage({ searchParams }: PageProps) {
   const params = await searchParams;
   const page = params.page ? parseInt(params.page) : 1;
-  const limit = params.limit ? parseInt(params.limit) : 12;
+  const limit = params.limit ? parseInt(params.limit) : 10;
   const searchTerm = params.searchTerm || "";
   const accessType = params.accessType || "";
   const categoryId = params.categoryId || "";
@@ -79,9 +79,12 @@ export default async function PublicIdeasPage({ searchParams }: PageProps) {
   }
 
   const ideas = result.data?.data || [];
+
+  console.log(ideas);
+
   const meta = result.data?.meta || {
     page: 1,
-    limit: 12,
+    limit: 10,
     total: 0,
     totalPages: 0,
   };

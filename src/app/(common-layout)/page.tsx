@@ -14,7 +14,7 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const result = await getAllIdeasPublic(1, 6, "", "true");
+  const result = await getAllIdeasPublic(1, 8, "", "true");
   const ideas = result.data?.data || [];
   return (
     <main className="min-h-screen">

@@ -98,9 +98,9 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
           </p>
         </div>
 
-        {/* Ideas Grid - Max 6 items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {ideas.slice(0, 6).map((idea, idx) => {
+        {/* Ideas Grid - Max 8 items */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  xl:grid-cols-4 gap-6">
+          {ideas.slice(0, 8).map((idea, idx) => {
             const access = getAccessBadge(idea.accessType, idea.price);
             const voteCount = idea._count?.votes || 0;
             const commentCount = idea._count?.comments || 0;
