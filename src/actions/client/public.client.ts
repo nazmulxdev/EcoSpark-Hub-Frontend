@@ -1,6 +1,7 @@
 "use server";
 
 import { blogService } from "@/services/public/blogs/blog.service";
+import { categoryServicePublic } from "@/services/public/blogs/category.service";
 
 export const getAllBlogsPublic = async (
   page?: number,
@@ -20,5 +21,10 @@ export const getAllBlogsPublic = async (
 
 export const getBlogBySlugPublic = async (slug: string) => {
   const result = await blogService.getBlogBySlug(slug);
+  return result;
+};
+
+export const getAllCategoriesPublic = async () => {
+  const result = await categoryServicePublic.getAllCategories();
   return result;
 };

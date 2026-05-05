@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { authClientService } from "@/services/auth/auth.service.client";
 import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 
 interface ProfileClientProps {
   user: {
@@ -30,6 +31,7 @@ interface ProfileClientProps {
 export function ProfileClient({ user }: ProfileClientProps) {
   const [name, setName] = useState(user?.name || "");
   const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,8 +41,8 @@ export function ProfileClient({ user }: ProfileClientProps) {
     }
     setIsSaving(true);
     try {
-      // ✅ Call the client service, not the server one
       await authClientService.updateProfile({ name: name.trim() });
+      router.refresh();
     } catch (error) {
       console.error(error);
       toast.error("Failed to update profile");
